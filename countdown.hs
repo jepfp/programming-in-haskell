@@ -16,9 +16,10 @@ instance Show Op where
 -- without performance optimization
 valid :: Op -> Int -> Int -> Bool
 valid Add _ _ = True
-valid Sub x y = x > y
+--valid Sub x y = x > y
+valid Sub x y = True
 valid Mul _ _ = True
-valid Div x y = x `mod` y == 0
+valid Div x y = y /= 0 && x `mod` y == 0
 
 -- With "Exploiting algebraic properties"
 -- ⚠️ using this version will not return True for many valid statements...
@@ -51,7 +52,7 @@ values (App _ l r) = values l ++ values r
 eval :: Expr -> [Int]
 eval (Val n) = [n | n > 0]
 eval (App o l r) =
-  [ apply o x y | x <- eval l, y <- eval r, valid o x y]
+  [apply o x y | x <- eval l, y <- eval r, valid o x y]
 
 -- combinatorial functions
 subs :: [a] -> [[a]]
@@ -142,3 +143,17 @@ isChoice (x : xs) ys = elem x ys && isChoice xs (removeOne x ys)
 -- stack overflow
 
 -- 4)
+amountOfPossibleExpresssions :: Int
+amountOfPossibleExpresssions = length ([e | ns' <- choices [1, 3, 7, 10, 25, 50], e <- exprs ns'])
+
+amountOfSucessfullyEvaluatingExpressions = length ([() | ns' <- choices [1, 3, 7, 10, 25, 50], e <- exprs ns', not (null (eval e))])
+
+-- 5)
+-- valid :: Op -> Int -> Int -> Bool
+-- valid Add _ _ = True
+-- valid Sub x y = True
+-- valid Mul _ _ = True
+-- valid Div x y = y /= 0 && x `mod` y == 0
+
+-- 6)
+-- skipped
